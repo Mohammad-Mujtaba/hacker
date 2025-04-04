@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Jinja2 Reference Guide</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            /* background-color: #f5f5f5; */
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 0.5rem;
+            margin: 2rem 0 1rem;
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin: 1.5rem 0 0.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--light);
+            opacity: 0.9;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            list-style: none;
+            background-color: var(--dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-tabs li {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .nav-tabs a {
+            display: block;
+            padding: 1rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tabs a:hover {
+            background-color: var(--secondary);
+        }
+        
+        .nav-tabs a.active {
+            background-color: var(--secondary);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 5px;
+           /* box-shadow: 0 2px 10px rgba(0,0,0,0.1); */
+            margin-bottom: 2rem;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--secondary);
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        
+        .example {
+            background-color: #f0f8ff;
+            border-left: 4px solid var(--secondary);
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .example-title {
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        
+        .note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .warning {
+            background-color: #ffebee;
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .success {
+            background-color: #e8f5e9;
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .search-container {
+            margin: 1rem 0;
+            position: relative;
+        }
+        
+        #search {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .quick-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .quick-link {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: var(--secondary);
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        
+        .quick-link:hover {
+            background-color: var(--primary);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            background-color: var(--dark);
+            color: white;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-tabs li {
+                flex: 100%;
+            }
+        }
+
+                .problem-solution {
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .problem-solution h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .steps {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+        
+        .steps h4 {
+            color: #27ae60;
+            margin-bottom: 0.5rem;
+        }
+        
+        .steps ol {
+            padding-left: 1.5rem;
+        }
+        
+        .steps li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .steps ul {
+            padding-left: 1.5rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Ultimate Jinja2 Reference Guide</h1>
+            <p class="subtitle">For Network Automation, FortiManager, and Beyond</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Search the Jinja2 guide...">
+        </div>
+        
+        <div class="quick-links">
+            <a href="https://jinja.palletsprojects.com/en/stable/" target="_blank"class="quick-link">Document</a>
+            <a href="#basics" class="quick-link">Basics</a>
+            <a href="#variables" class="quick-link">Variables</a>
+            <a href="#logic" class="quick-link">Logic</a>
+            <a href="#loops" class="quick-link">Loops</a>
+            <a href="#filters" class="quick-link">Filters</a>
+            <a href="#macros" class="quick-link">Macros</a>
+            <a href="#fortinet" class="quick-link">FortiManager</a>
+            <!-- <a href="troubleshooting.html" class="quick-link">Troubleshooting</a> -->
+        </div>
+        
+        <ul class="nav-tabs">
+            <li><a href="#basics" class="active">Basics</a></li>
+            <li><a href="#variables">Variables</a></li>
+            <li><a href="#logic">Logic</a></li>
+            <li><a href="#loops">Loops</a></li>
+            <li><a href="#filters">Filters</a></li>
+            <li><a href="#macros">Macros</a></li>
+            <li><a href="#fortinet">FortiManager</a></li>
+        </ul>
+        
+        <!-- Basics Tab -->
+        <div id="basics" class="tab-content active">
+            <a href="https://jinja.palletsprojects.com/en/stable/" class="quick-link">Document</a>
+
+            <h2>Jinja2 Basics</h2>
+            <p>Jinja2 is a modern and designer-friendly templating language for Python, modeled after Django's templates. It's fast, widely used, and secure with sandboxed template execution.</p>
+            
+            <h3>Why Jinja2 for Network Automation?</h3>
+            <ul>
+                <li>Generate consistent network device configurations</li>
+                <li>Create dynamic templates for multiple devices</li>
+                <li>Reduce human error in repetitive configurations</li>
+                <li>Integrate with tools like Ansible, SaltStack, and FortiManager</li>
+            </ul>
+            
+            <h3>Template Syntax Basics</h3>
+            <p>Jinja2 uses specific delimiters for different purposes:</p>
+            
+            <table>
+                <tr>
+                    <th>Syntax</th>
+                    <th>Purpose</th>
+                    <th>Example</th>
+                </tr>
+                <tr>
+                    <td><code>{{ ... }}</code></td>
+                    <td>Output/print a variable or expression</td>
+                    <td><code>{{ hostname }}</code></td>
+                </tr>
+                <tr>
+                    <td><code>{% ... %}</code></td>
+                    <td>Control structures (if, for, etc.)</td>
+                    <td><code>{% for interface in interfaces %}</code></td>
+                </tr>
+                <tr>
+                    <td><code>{# ... #}</code></td>
+                    <td>Comments (not included in output)</td>
+                    <td><code>{# This is a comment #}</code></td>
+                </tr>
+                <tr>
+                    <td><code>## ... ##</code></td>
+                    <td>Line statements (if configured)</td>
+                    <td><code>## for item in list</code></td>
+                </tr>
+            </table>
+            
+            <div class="example">
+                <div class="example-title">Basic Template Example</div>
+                <div class="code-block">hostname {{ device.hostname }}
+!
+{# Interface configuration #}
+{% for interface in device.interfaces %}
+interface {{ interface.name }}
+  description {{ interface.description }}
+  ip address {{ interface.ip }} {{ interface.netmask }}
+  {% if interface.vlan %}
+  vlan {{ interface.vlan }}
+  {% endif %}
+!
+{% endfor %}</div>
+            </div>
+            
+            <div class="note">
+                <p><strong>Note:</strong> Jinja2 templates are just text files with special syntax. They don't execute code directly but generate text output based on the template and provided data.</p>
+            </div>
+        </div>
+        
+        <!-- Variables Tab -->
+       <!-- Variables Tab -->
+<div id="variables" class="tab-content">
+    <h2>Working with Variables</h2>
+    <p>Variables are named containers that store data values. They allow you to insert dynamic content into your templates and make them reusable across different contexts.</p>
+    
+    <h3>What Are Variables in Jinja2?</h3>
+    <p>In Jinja2, variables are placeholders that get replaced with actual values when the template is rendered. They:</p>
+    <ul>
+        <li>Act as references to data passed to the template</li>
+        <li>Can represent simple values or complex objects</li>
+        <li>Make templates dynamic and reusable</li>
+        <li>Are case-sensitive (myVar is different from myvar)</li>
+    </ul>
+    
+    <h3>Variable Data Types</h3>
+    <p>Jinja2 supports several data types that variables can hold:</p>
+    
+    <table>
+        <tr>
+            <th>Data Type</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td><strong>String</strong></td>
+            <td>Text data (enclosed in quotes)</td>
+            <td><code>{{ "Firewall Policy" }}</code></td>
+        </tr>
+        <tr>
+            <td><strong>Number</strong></td>
+            <td>Integer or floating-point numbers</td>
+            <td><code>{{ 42 }}</code> or <code>{{ 3.14 }}</code></td>
+        </tr>
+        <tr>
+            <td><strong>Boolean</strong></td>
+            <td>True/False values</td>
+            <td><code>{{ true }}</code> or <code>{{ false }}</code></td>
+        </tr>
+        <tr>
+            <td><strong>List/Array</strong></td>
+            <td>Ordered sequence of items</td>
+            <td><code>{{ [1, 2, 3] }}</code></td>
+        </tr>
+        <tr>
+            <td><strong>Dictionary/Object</strong></td>
+            <td>Key-value pairs</td>
+            <td><code>{{ {'name': 'FW1', 'ip': '192.168.1.1'} }}</code></td>
+        </tr>
+        <tr>
+            <td><strong>None</strong></td>
+            <td>Represents no value</td>
+            <td><code>{{ none }}</code></td>
+        </tr>
+    </table>
+    
+    <div class="note">
+        <p><strong>Note:</strong> In FortiManager templates, you'll often work with strings (for names, descriptions), numbers (for IDs, ports), and dictionaries (for complex objects like policies).</p>
+    </div>
+    
+    <h3>Accessing Variables</h3>
+    <p>Variables are accessed using the <code>{{ variable_name }}</code> syntax:</p>
+    
+    <div class="code-block">System hostname: {{ hostname }}
+Current date: {{ current_date }}
+Policy status: {{ policy.active }}</div>
+    
+    <h3>Variable Attributes</h3>
+    <p>Access attributes of objects using dot notation:</p>
+    
+    <div class="code-block">Interface IP: {{ interface.ip_address }}
+Subnet Mask: {{ interface.subnet_mask }}
+VLAN ID: {{ interface.vlan.id }}</div>
+    
+    <h3>Dictionary Access</h3>
+    <p>Access dictionary items with dot notation or subscript syntax:</p>
+    
+    <div class="code-block">Device model: {{ device.model }}  {# dot notation #}
+Device model: {{ device['model'] }}  {# subscript syntax #}
+Device location: {{ device.get('location', 'Unknown') }}  {# with default #}</div>
+    
+    <div class="example">
+        <div class="example-title">FortiManager Variable Example with Data Types</div>
+        <div class="code-block">config firewall policy
+  edit {{ policy.id }}  {# Number #}
+    set name "{{ policy.name }}"  {# String #}
+    set srcintf "{{ policy.source_interface }}"
+    set dstintf "{{ policy.destination_interface }}"
+    set srcaddr {{ policy.source_addresses|join(' ') }}  {# List #}
+    set dstaddr {{ policy.destination_addresses|join(' ') }}
+    set action {{ policy.action|lower }}  {# String converted to lowercase #}
+    set schedule "{{ policy.schedule }}"
+    set service "{{ policy.service }}"
+    set logtraffic {{ policy.log_traffic|default('enable') }}  {# Boolean-like string #}
+    {% if policy.tags %}  {# List check #}
+    set tags {{ policy.tags|join(' ') }}
+    {% endif %}
+  next
+end</div>
+    </div>
+    
+    <h3>Default Values</h3>
+    <p>Use the <code>default</code> filter to provide fallback values when a variable might be undefined:</p>
+    
+    <div class="code-block">Logging: {{ logging_enabled|default('disabled') }}  {# String default #}
+Port: {{ port_number|default(80) }}  {# Number default #}
+Retry count: {{ retries|default(3) }}</div>
+    
+    <div class="warning">
+        <p><strong>Warning:</strong> If a variable doesn't exist and you don't use a default, Jinja2 will raise an undefined error unless you've configured it to ignore such cases. Always provide defaults for optional fields in production templates.</p>
+    </div>
+    
+    <h3>Checking Variable Types</h3>
+    <p>You can check variable types using the <code>is</code> operator with these tests:</p>
+    
+    <div class="code-block">{% if policy.action is string %}
+  {# Action is a string #}
+{% endif %}
+
+{% if port_number is number %}
+  {# Port is a number #}
+{% endif %}
+
+{% if address_list is iterable %}
+  {# Can loop through address_list #}
+{% endif %}
+
+{% if setting_value is none %}
+  {# Value is not provided #}
+{% endif %}</div>
+</div>
+        
+        <!-- Logic Tab -->
+        <div id="logic" class="tab-content">
+            <h2>Control Structures and Logic</h2>
+            <p>Jinja2 provides several control structures to add logic to your templates.</p>
+            
+            <h3>If Statements</h3>
+            <p>Conditionally include content based on conditions:</p>
+            
+            <div class="code-block">{% if device.type == 'firewall' %}
+  set security-level high
+{% elif device.type == 'switch' %}
+  set security-level medium
+{% else %}
+  set security-level low
+{% endif %}</div>
+            
+            <h3>Comparison Operators</h3>
+            <p>Jinja2 supports standard comparison operators:</p>
+            
+            <table>
+                <tr>
+                    <th>Operator</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+                <tr>
+                    <td><code>==</code></td>
+                    <td>Equal to</td>
+                    <td><code>{% if vlan == 10 %}</code></td>
+                </tr>
+                <tr>
+                    <td><code>!=</code></td>
+                    <td>Not equal to</td>
+                    <td><code>{% if status != 'down' %}</code></td>
+                </tr>
+                <tr>
+                    <td><code>&gt;</code></td>
+                    <td>Greater than</td>
+                    <td><code>{% if count > 5 %}</code></td>
+                </tr>
+                <tr>
+                    <td><code>&gt;=</code></td>
+                    <td>Greater than or equal</td>
+                    <td><code>{% if version >= 6.4 %}</code></td>
+                </tr>
+                <tr>
+                    <td><code>&lt;</code></td>
+                    <td>Less than</td>
+                    <td><code>{% if latency < 100 %}</code></td>
+                </tr>
+                <tr>
+                    <td><code>&lt;=</code></td>
+                    <td>Less than or equal</td>
+                    <td><code>{% if errors <= 0 %}</code></td>
+                </tr>
+                <tr>
+                    <td><code>and</code></td>
+                    <td>Logical AND</td>
+                    <td><code>{% if active and not disabled %}</code></td>
+                </tr>
+                <tr>
+                    <td><code>or</code></td>
+                    <td>Logical OR</td>
+                    <td><code>{% if http or https %}</code></td>
+                </tr>
+                <tr>
+                    <td><code>not</code></td>
+                    <td>Logical NOT</td>
+                    <td><code>{% if not maintenance_mode %}</code></td>
+                </tr>
+            </table>
+            
+            <div class="example">
+                <div class="example-title">FortiGate Policy Example</div>
+                <div class="code-block">config firewall policy
+  edit 0
+    set srcintf "port1"
+    set dstintf "port2"
+    set srcaddr "all"
+    set dstaddr "all"
+    set action accept
+    {% if policy.requires_authentication %}
+    set identity-based enable
+    set identity-based-policy {{ policy.auth_policy_id }}
+    {% endif %}
+    {% if policy.logs_traffic %}
+    set logtraffic all
+    {% else %}
+    set logtraffic disable
+    {% endif %}
+    set schedule "always"
+    set service "ALL"
+  next
+end</div>
+            </div>
+            
+            <h3>Tests</h3>
+            <p>Jinja2 provides tests that can be used with the <code>is</code> operator:</p>
+            
+            <div class="code-block">{% if interface.status is defined %}
+  {# Interface status exists #}
+{% endif %}
+
+{% if ip_address is not none %}
+  {# IP address is not null #}
+{% endif %}</div>
+            
+            <p>Common tests:</p>
+            <ul>
+                <li><code>defined</code> - check if variable exists</li>
+                <li><code>none</code> - check if value is None</li>
+                <li><code>even</code> - check if number is even</li>
+                <li><code>odd</code> - check if number is odd</li>
+                <li><code>lower</code> - check if string is lowercase</li>
+                <li><code>upper</code> - check if string is uppercase</li>
+            </ul>
+        </div>
+        
+        <!-- Loops Tab -->
+        <div id="loops" class="tab-content">
+            <h2>Loops and Iteration</h2>
+            <p>Jinja2 provides powerful looping constructs to handle repetitive tasks.</p>
+            
+            <h3>For Loops</h3>
+            <p>Iterate over sequences (lists, tuples) and dictionaries:</p>
+            
+            <div class="code-block">{% for interface in interfaces %}
+interface {{ interface.name }}
+  description {{ interface.description }}
+  ip address {{ interface.ip }} {{ interface.netmask }}
+!
+{% endfor %}</div>
+            
+            <h3>Loop Variables</h3>
+            <p>Inside a loop, you have access to special variables:</p>
+            
+            <table>
+                <tr>
+                    <th>Variable</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td><code>loop.index</code></td>
+                    <td>Current iteration (1-based)</td>
+                </tr>
+                <tr>
+                    <td><code>loop.index0</code></td>
+                    <td>Current iteration (0-based)</td>
+                </tr>
+                <tr>
+                    <td><code>loop.revindex</code></td>
+                    <td>Iteration from end (1-based)</td>
+                </tr>
+                <tr>
+                    <td><code>loop.revindex0</code></td>
+                    <td>Iteration from end (0-based)</td>
+                </tr>
+                <tr>
+                    <td><code>loop.first</code></td>
+                    <td>True if first iteration</td>
+                </tr>
+                <tr>
+                    <td><code>loop.last</code></td>
+                    <td>True if last iteration</td>
+                </tr>
+                <tr>
+                    <td><code>loop.length</code></td>
+                    <td>Total number of items</td>
+                </tr>
+            </table>
+            
+            <div class="example">
+                <div class="example-title">Loop Variables Example</div>
+                <div class="code-block">{% for user in users %}
+User #{{ loop.index }}: {{ user.name }}
+{% if not loop.last %}, {% endif %}
+{% endfor %}</div>
+            </div>
+            
+            <h3>Dictionary Iteration</h3>
+            <p>Iterate over dictionary keys and values:</p>
+            
+            <div class="code-block">{% for key, value in settings.items() %}
+set {{ key }} "{{ value }}"
+{% endfor %}</div>
+            
+            <div class="example">
+                <div class="example-title">FortiManager Address Group Example</div>
+                <div class="code-block">config firewall addrgrp
+  edit "{{ group.name }}"
+    set member {% for address in group.members %}"{{ address }}"{% if not loop.last %} {% endif %}{% endfor %}
+    set comment "{{ group.description }}"
+  next
+end</div>
+            </div>
+            
+            <h3>Loop Controls</h3>
+            <p>Control loop execution with these statements:</p>
+            
+            <div class="code-block">{% for item in list %}
+  {% if item == 'skip' %}
+    {% continue %}  {# Skip to next iteration #}
+  {% endif %}
+  
+  {{ item }}
+  
+  {% if item == 'break' %}
+    {% break %}  {# Exit loop entirely #}
+  {% endif %}
+{% endfor %}</div>
+        </div>
+        
+        <!-- Filters Tab -->
+        <div id="filters" class="tab-content">
+            <h2>Filters</h2>
+            <p>Filters transform variable output. They are applied with the pipe (<code>|</code>) symbol.</p>
+            
+            <h3>Common Built-in Filters</h3>
+            
+            <table>
+                <tr>
+                    <th>Filter</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+                <tr>
+                    <td><code>default</code></td>
+                    <td>Provide default if value is undefined</td>
+                    <td><code>{{ log_level|default('info') }}</code></td>
+                </tr>
+                <tr>
+                    <td><code>length</code></td>
+                    <td>Get length of sequence</td>
+                    <td><code>{{ interfaces|length }}</code></td>
+                </tr>
+                <tr>
+                    <td><code>lower</code></td>
+                    <td>Convert to lowercase</td>
+                    <td><code>{{ hostname|lower }}</code></td>
+                </tr>
+                <tr>
+                    <td><code>upper</code></td>
+                    <td>Convert to uppercase</td>
+                    <td><code>{{ protocol|upper }}</code></td>
+                </tr>
+                <tr>
+                    <td><code>trim</code></td>
+                    <td>Strip whitespace</td>
+                    <td><code>{{ description|trim }}</code></td>
+                </tr>
+                <tr>
+                    <td><code>replace</code></td>
+                    <td>Replace substrings</td>
+                    <td><code>{{ path|replace(' ', '_') }}</code></td>
+                </tr>
+                <tr>
+                    <td><code>join</code></td>
+                    <td>Join sequence with string</td>
+                    <td><code>{{ vlans|join(',') }}</code></td>
+                </tr>
+                <tr>
+                    <td><code>batch</code></td>
+                    <td>Batch items into lists</td>
+                    <td><code>{{ ips|batch(3) }}</code></td>
+                </tr>
+                <tr>
+                    <td><code>tojson</code></td>
+                    <td>Convert to JSON</td>
+                    <td><code>{{ config|tojson }}</code></td>
+                </tr>
+                <tr>
+                    <td><code>ipaddr</code></td>
+                    <td>IP address manipulation (if available)</td>
+                    <td><code>{{ '192.168.1.1'|ipaddr('netmask') }}</code></td>
+                </tr>
+            </table>
+            
+            <div class="example">
+                <div class="example-title">Filter Examples</div>
+                <div class="code-block">{# Ensure interface name is lowercase with no spaces #}
+interface {{ interface.name|lower|replace(' ', '_') }}
+
+{# Join multiple VLANs with commas #}
+switchport trunk allowed vlan {{ vlan_list|join(',') }}
+
+{# Default value for optional setting #}
+set logging {{ logging_level|default('disable') }}</div>
+            </div>
+            
+            <h3>Chaining Filters</h3>
+            <p>Filters can be chained together:</p>
+            
+            <div class="code-block">{{ description|trim|lower|replace(' ', '-') }}</div>
+            
+            <h3>Custom Filters</h3>
+            <p>In Python environments, you can create custom filters. For FortiManager, you might have filters like:</p>
+            
+            <div class="code-block">{# Hypothetical custom filter #}
+set policy-id {{ policy.name|fortigate_safe_name }}</div>
+            
+            <div class="note">
+                <p><strong>Note:</strong> The availability of custom filters depends on your Jinja2 environment. In FortiManager, you may have access to specific Fortinet-related filters.</p>
+            </div>
+        </div>
+        
+        <!-- Macros Tab -->
+        <div id="macros" class="tab-content">
+            <h2>Macros and Reusable Components</h2>
+            <p>Macros are like functions in Jinja2 - reusable template components.</p>
+            
+            <h3>Basic Macro</h3>
+            <p>Define and call macros to avoid repetition:</p>
+            
+            <div class="code-block">{% macro interface_config(name, ip, netmask, description='') %}
+interface {{ name }}
+  description {{ description|default('') }}
+  ip address {{ ip }} {{ netmask }}
+!
+{% endmacro %}
+
+{# Use the macro #}
+{{ interface_config('GigabitEthernet0/1', '192.168.1.1', '255.255.255.0', 'Management interface') }}
+{{ interface_config('GigabitEthernet0/2', '10.0.0.1', '255.255.255.0') }}</div>
+            
+            <h3>Macro Arguments</h3>
+            <p>Macros can have required and optional arguments:</p>
+            
+            <div class="code-block">{% macro fortigate_policy(id, srcintf, dstintf, srcaddr, dstaddr, action='accept', log='enable') %}
+config firewall policy
+  edit {{ id }}
+    set srcintf "{{ srcintf }}"
+    set dstintf "{{ dstintf }}"
+    set srcaddr "{{ srcaddr }}"
+    set dstaddr "{{ dstaddr }}"
+    set action {{ action }}
+    set logtraffic {{ log }}
+  next
+end
+{% endmacro %}
+
+{# Using the macro #}
+{{ fortigate_policy(1, 'port1', 'port2', 'all', 'all') }}
+{{ fortigate_policy(2, 'port1', 'port3', 'internal_net', 'webservers', action='deny', log='disable') }}</div>
+            
+            <h3>Importing Macros</h3>
+            <p>Store macros in separate files and import them:</p>
+            
+            <div class="code-block">{% from 'fortigate_macros.j2' import fortigate_policy %}
+
+{{ fortigate_policy(1, 'port1', 'port2', 'all', 'all') }}</div>
+            
+            <div class="example">
+                <div class="example-title">FortiManager Macro Library Example</div>
+                <div class="code-block">{# fortinet_macros.j2 #}
+{% macro fortigate_address(name, ip, associated_interface='') %}
+config firewall address
+  edit "{{ name }}"
+    set associated-interface "{{ associated_interface }}"
+    set subnet {{ ip }}
+  next
+end
+{% endmacro %}
+
+{% macro fortigate_service(name, protocol, port) %}
+config firewall service custom
+  edit "{{ name }}"
+    set {{ protocol }} {{ port }}
+  next
+end
+{% endmacro %}</div>
+            </div>
+            
+            <div class="success">
+                <p><strong>Pro Tip:</strong> Create a library of macros for common FortiManager configuration patterns to dramatically speed up your template development.</p>
+            </div>
+        </div>
+        
+        <!-- FortiManager Tab -->
+        <div id="fortinet" class="tab-content">
+            <h2>FortiManager Specific Jinja2 Usage</h2>
+            <p>Special considerations and patterns for FortiManager automation.</p>
+            
+            <h3>FortiManager Template Structure</h3>
+            <p>Typical structure for device or policy templates:</p>
+            
+            <div class="code-block">## FMG-Dynamic-Mapping
+## ==== Device Level ====
+config system global
+    set hostname {{ hostname|default('FortiGate') }}
+    set timezone {{ timezone|default('04') }}
+end
+
+## ==== Policy Package ====
+config firewall policy
+    {% for policy in policies %}
+    edit {{ policy.id }}
+        set name "{{ policy.name }}"
+        set srcintf "{{ policy.srcintf }}"
+        set dstintf "{{ policy.dstintf }}"
+        set srcaddr "{{ policy.srcaddr }}"
+        set dstaddr "{{ policy.dstaddr }}"
+        set action {{ policy.action|default('accept') }}
+        set schedule "{{ policy.schedule|default('always') }}"
+        set service "{{ policy.service|default('ALL') }}"
+        {% if policy.nat %}
+        set nat {{ policy.nat|lower }}
+        {% endif %}
+    next
+    {% endfor %}
+end</div>
+            
+            <h3>Dynamic Variables in FortiManager</h3>
+            <p>FortiManager provides special variables:</p>
+            
+            <table>
+                <tr>
+                    <th>Variable</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td><code>${name}</code></td>
+                    <td>Device name</td>
+                </tr>
+                <tr>
+                    <td><code>${serial}</code></td>
+                    <td>Device serial number</td>
+                </tr>
+                <tr>
+                    <td><code>${ip}</code></td>
+                    <td>Device IP</td>
+                </tr>
+                <tr>
+                    <td><code>${dynamic}</code></td>
+                    <td>Dynamic mapping values</td>
+                </tr>
+            </table>
+            
+            <div class="example">
+                <div class="example-title">Dynamic Interface Assignment</div>
+                <div class="code-block">config system interface
+  edit "port1"
+    set mode static
+    set ip ${dynamic.port1.ip}/${dynamic.port1.netmask}
+    set allowaccess {{ mgmt_allow_access|default('ping https ssh') }}
+    set description "MGMT - ${name}"
+  next
+end</div>
+            </div>
+            
+            <h3>Best Practices for FortiManager Templates</h3>
+            <ul>
+                <li>Use consistent naming conventions for variables</li>
+                <li>Include comments explaining complex sections</li>
+                <li>Provide default values for optional settings</li>
+                <li>Group related configurations together</li>
+                <li>Use macros for frequently repeated configurations</li>
+                <li>Test templates with various input data</li>
+            </ul>
+            
+            <div class="example">
+                <div class="example-title">Complete FortiGate Template Example</div>
+                <div class="code-block">## FMG-Device-Template
+## Basic System Configuration
+config system global
+    set hostname ${name}
+    set admintimeout {{ admin_timeout|default('480') }}
+    set timezone {{ timezone|default('04') }}
+end
+
+config system interface
+{% for interface in interfaces %}
+    edit "{{ interface.name }}"
+        set vdom "root"
+        set ip {{ interface.ip }}/{{ interface.netmask }}
+        set description "{{ interface.description }}"
+        {% if interface.allowaccess %}
+        set allowaccess {{ interface.allowaccess }}
+        {% endif %}
+        set status up
+    next
+{% endfor %}
+end
+
+## Firewall Address Objects
+config firewall address
+{% for address in firewall_addresses %}
+    edit "{{ address.name }}"
+        set subnet {{ address.ip }}/{{ address.netmask }}
+        {% if address.associated_interface %}
+        set associated-interface "{{ address.associated_interface }}"
+        {% endif %}
+    next
+{% endfor %}
+end
+
+## Firewall Policies
+config firewall policy
+{% for policy in firewall_policies %}
+    edit {{ policy.id }}
+        set name "{{ policy.name }}"
+        set srcintf "{{ policy.srcintf }}"
+        set dstintf "{{ policy.dstintf }}"
+        set srcaddr "{{ policy.srcaddr }}"
+        set dstaddr "{{ policy.dstaddr }}"
+        set action {{ policy.action }}
+        set schedule "{{ policy.schedule|default('always') }}"
+        set service "{{ policy.service|default('ALL') }}"
+        set logtraffic {{ policy.logtraffic|default('enable') }}
+    next
+{% endfor %}
+end</div>
+            </div>
+            
+            <h3>Troubleshooting FortiManager Templates</h3>
+            <p>Common issues and solutions:</p>
+            
+            <table>
+                <tr>
+                    <th>Issue</th>
+                    <th>Solution</th>
+                </tr>
+                <tr>
+                    <td>Variables not expanding</td>
+                    <td>Check variable names match input data, ensure proper delimiters ({{ }})</td>
+                </tr>
+                <tr>
+                    <td>Syntax errors</td>
+                    <td>Validate template with a Jinja2 validator before importing</td>
+                </tr>
+                <tr>
+                    <td>Unexpected whitespace</td>
+                    <td>Use whitespace control (<code>{%-</code> and <code>-%}</code>)</td>
+                </tr>
+                <tr>
+                    <td>Dynamic mappings not working</td>
+                    <td>Verify dynamic variable names match database fields</td>
+                </tr>
+                <tr>
+                    <td>Missing defaults</td>
+                    <td>Always provide default values for optional settings</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- Troubleshooting Tab -->
+        <div id="troubleshooting" class="tab-content">
+            <h2>Troubleshooting and Best Practices</h2>
+            
+            <h3>Common Jinja2 Errors</h3>
+            <table>
+                <tr>
+                    <th>Error</th>
+                    <th>Cause</th>
+                    <th>Solution</th>
+                </tr>
+                <tr>
+                    <td>UndefinedError</td>
+                    <td>Variable not defined</td>
+                    <td>Use <code>default</code> filter or ensure variable exists</td>
+                </tr>
+                <tr>
+                    <td>TemplateSyntaxError</td>
+                    <td>Invalid syntax</td>
+                    <td>Check for missing <code>%}</code> or other syntax issues</td>
+                </tr>
+                <tr>
+                    <td>Unexpected whitespace</td>
+                    <td>Control structures add newlines</td>
+                    <td>Use whitespace control (<code>{%-</code> and <code>-%}</code>)</td>
+                </tr>
+                <tr>
+                    <td>Filter not found</td>
+                    <td>Filter not available</td>
+                    <td>Check filter name or create custom filter</td>
+                </tr>
+            </table>
+            
+            <h3>Whitespace Control</h3>
+            <p>Control whitespace in output with <code>-</code> in tags:</p>
+            
+            <div class="code-block">{% for item in list -%}
+  {{ item }}
+{%- endfor %}</div>
+            
+            <p>The <code>-</code> removes whitespace before or after the tag.</p>
+            
+            <h3>Debugging Techniques</h3>
+            <ul>
+                <li>Use <code>{{ variable|tojson }}</code> to inspect complex variables</li>
+                <li>Add debug comments with <code>{# DEBUG: ... #}</code></li>
+                <li>Break complex templates into smaller parts</li>
+                <li>Test with simplified data first</li>
+                <li>Use online Jinja2 testers for validation</li>
+            </ul>
+            
+            <div class="example">
+                <div class="example-title">Debugging Example</div>
+                <div class="code-block">{# DEBUG: Show all available variables #}
+{# {{ vars()|tojson }} #}
+
+{# DEBUG: Check interface data structure #}
+{# {{ interfaces|tojson }} #}
+
+{% for interface in interfaces %}
+interface {{ interface.name }}
+  {# DEBUG: Show full interface object #}
+  {# {{ interface|tojson }} #}
+  ip address {{ interface.ip }} {{ interface.netmask }}
+!
+{% endfor %}</div>
+            </div>
+            
+            <h3>Best Practices</h3>
+            <ul>
+                <li>Keep templates readable - add comments and spacing</li>
+                <li>Use consistent naming conventions</li>
+                <li>Provide defaults for optional values</li>
+                <li>Validate input data before templating</li>
+                <li>Create reusable macros for common patterns</li>
+                <li>Document template requirements</li>
+                <li>Test with edge cases (empty lists, missing values)</li>
+            </ul>
+            
+            <div class="success">
+                <p><strong>Pro Tip:</strong> For FortiManager automation, maintain a library of tested, reusable templates and macros for common configuration patterns to ensure consistency across your deployments.</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Ultimate Jinja2 Reference Guide - For Network Automation and FortiManager</p>
+            <p>Bookmark this page for quick reference!</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.nav-tabs a');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    this.classList.add('active');
+                    const target = this.getAttribute('href');
+                    document.querySelector(target).classList.add('active');
+                });
+            });
+            
+            // Search functionality
+            const searchInput = document.getElementById('search');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                if (searchTerm.length < 2) return;
+                
+                tabContents.forEach(content => {
+                    const text = content.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        // Highlight matching content
+                        const html = content.innerHTML;
+                        const regex = new RegExp(searchTerm, 'gi');
+                        const highlighted = html.replace(regex, match => 
+                            `<span style="background-color: yellow;">${match}</span>`);
+                        content.innerHTML = highlighted;
+                        
+                        // Show the tab containing the match
+                        const tabId = content.getAttribute('id');
+                        document.querySelector(`.nav-tabs a[href="#${tabId}"]`).click();
+                    }
+                });
+            });
+            
+            // Quick links functionality
+            const quickLinks = document.querySelectorAll('.quick-link');
+            quickLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('href');
+                    document.querySelector(`.nav-tabs a[href="${target}"]`).click();
+                    window.scrollTo(0, 0);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
